@@ -1,15 +1,20 @@
-import requests
+import yfinance as yf
+from fastapi import HTTPException
 
 class DataService:
-    YAHOO_FINANCE_API_URL = "https://query1.finance.yahoo.com/v7/finance/quote"
-
     def get_market_data(self, symbols: list):
-        """Obtiene datos de mercado en tiempo real desde Yahoo Finance."""
-        query = ','.join(symbols)
-        url = f"{self.YAHOO_FINANCE_API_URL}?symbols={query}"
-        response = requests.get(url)
-
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise Exception("Error al obtener datos de Yahoo Finance.")
+        """Obtiene datos de mercado en tiempo real desde Yahoo Finance usando yfinance."""
+        data = {}
+        try:
+            for symbol in symbols:
+                print(f"Obteniendo datos para: {symbol}")
+                ticker = yf.Ticker(symbol)
+                print("Obteniendo datos de mercado...")
+                history = ticker.history(period="1d", interval="15m")
+                print("History: ", history)
+                if history.empty:
+                    raise ValueError(f"No data found for symbol: {symbol}")
+                data[symbol] = history.to_dict()
+            return data
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error al obtener datos de Yahoo Finance: {str(e)}")
