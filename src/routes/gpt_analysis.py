@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.services.gpt_service import GPTService
+from src.services.gpt_service import GPTService
 
 router = APIRouter()
 gpt_service = GPTService(api_key="tu_api_key_de_openai")

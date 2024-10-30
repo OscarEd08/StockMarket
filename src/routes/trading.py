@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.services.broker_service import BrokerService
+from src.services.broker_service import BrokerService
 
 router = APIRouter()
 broker_service = BrokerService()
