@@ -13,6 +13,7 @@ dist/
 .env
 .venv
 env/
+venv/
 # mypy
 .idea/*
 
