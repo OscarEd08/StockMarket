@@ -4,8 +4,8 @@ from sklearn.linear_model import LinearRegression
 
 class PredictionService:
     def __init__(self, json_file='market_data.json'):
-        with open(json_file, 'r', encoding='utf-8') as file:
-            self.data = json.load(file)
+        self.data : dict | None = None
+        self.load_data(json_file)
 
     def predict_prices(self, symbol, days):
         if symbol not in self.data:
@@ -30,3 +30,7 @@ class PredictionService:
         predictions = model.predict(future_X)
 
         return {str(date): price for date, price in zip(future_dates, predictions)}
+
+    def load_data(self, json_file='market_data.json'):
+        with open(json_file, 'r', encoding='utf-8') as file:
+            self.data = json.load(file)
