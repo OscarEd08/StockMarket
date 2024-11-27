@@ -1,14 +1,12 @@
 import json
-
 import pandas as pd
 import yfinance as yf
 from fastapi import HTTPException
 
-
 class DataService:
     def get_market_data(self, symbols: list, period: str):
         """Obtiene datos de mercado en tiempo real desde Yahoo Finance usando yfinance y los guarda en un archivo JSON."""
-        data = {}
+        stocks = {}
         try:
             for symbol in symbols:
                 print(f"Obteniendo datos para: {symbol}")
@@ -21,13 +19,13 @@ class DataService:
 
                 # Convert Timestamp objects to strings
                 history.index = history.index.map(lambda x: x.isoformat() if isinstance(x, pd.Timestamp) else x)
-                data[symbol] = history.to_dict()
+                stocks[symbol] = history.to_dict()
 
             # Guardar los datos en un archivo JSON
             with open('market_data.json', 'w', encoding='utf-8') as json_file:
-                json.dump(data, json_file, indent=4, default=str)
+                json.dump({"stocks": stocks}, json_file, indent=4, default=str)
 
-            return data
+            return {"stocks": stocks}
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error al obtener datos de Yahoo Finance: {str(e)}")

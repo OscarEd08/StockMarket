@@ -8,10 +8,10 @@ class PredictionService:
         self.load_data(json_file)
 
     def predict_prices(self, symbol, days):
-        if symbol not in self.data:
+        if symbol not in self.data['stocks']:
             raise ValueError(f"No data found for symbol: {symbol}")
 
-        history = self.data[symbol]
+        history = self.data['stocks'][symbol]
         dates = list(history['Close'].keys())
         prices = list(history['Close'].values())
 
@@ -29,7 +29,7 @@ class PredictionService:
         future_X = np.array([date.astype(int) for date in future_dates]).reshape(-1, 1)
         predictions = model.predict(future_X)
 
-        return {str(date): price for date, price in zip(future_dates, predictions)}
+        return {"prediction": {str(date): price for date, price in zip(future_dates, predictions)}}
 
     def load_data(self, json_file='market_data.json'):
         with open(json_file, 'r', encoding='utf-8') as file:

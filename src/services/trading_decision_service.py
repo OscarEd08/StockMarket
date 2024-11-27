@@ -15,7 +15,7 @@ class TradingDecisionService:
         predictions = self.prediction_service.predict_prices(symbol, days)
 
         # Convert predictions to a list of prices
-        predicted_prices = list(predictions.values())
+        predicted_prices = list(predictions["prediction"].values())
         
         if len(predicted_prices) < 2:
             raise ValueError("Not enough data for decision-making.")
