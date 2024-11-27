@@ -76,14 +76,14 @@ class CompanyNewsSentimentalAnalysis:
         self.company_news_dict[company_name]['name'] = company_name
 
     def run_sentimental_analysis(self, company_name):
-        self.company_news_dict[company_name]['title polarity'], self.company_news_dict[company_name]['title sentiment'] = \
+        self.company_news_dict[company_name]['titlePolarity'], self.company_news_dict[company_name]['titleSentiment'] = \
             zip(*self.company_news_dict[company_name]['titles'].apply(self.analyze_sentiment))
-        self.company_news_dict[company_name]['summary polarity'], self.company_news_dict[company_name]['summary sentiment'] = \
+        self.company_news_dict[company_name]['summaryPolarity'], self.company_news_dict[company_name]['summarySentiment'] = \
             zip(*self.company_news_dict[company_name]['summaries'].apply(self.analyze_sentiment))
 
     def calculate_average_polarity(self, company_name):
-        title_average_polarity = self.company_news_dict[company_name]['title polarity'].mean()
-        summary_average_polarity = self.company_news_dict[company_name]['summary polarity'].mean()
+        title_average_polarity = self.company_news_dict[company_name]['titlePolarity'].mean()
+        summary_average_polarity = self.company_news_dict[company_name]['summaryPolarity'].mean()
         filt = self.companies_df['name'] == company_name
         self.companies_df.loc[filt, 'title average polarity'] = title_average_polarity
         self.companies_df.loc[filt, 'summary average polarity'] = summary_average_polarity
@@ -92,10 +92,9 @@ class CompanyNewsSentimentalAnalysis:
     def combine_company_news(self):
         self.company_news_df = pd.concat(list(self.company_news_dict.values()))
 
-    def get_sentiment_analysis_json(self):
-        # data_dict = self.company_news_df.to_dict(orient='records')
-        # return json.dumps(data_dict, ensure_ascii=False)
-        return json.loads(self.company_news_df.to_json(orient='records'))
+    def get_sentiment_analysis_json(self):        
+        analysisJson = json.loads(self.company_news_df.to_json(orient='records'))
+        return {'news': analysisJson }
 
     def run(self):
         self.gather_companies_info()
